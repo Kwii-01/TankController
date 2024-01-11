@@ -3,47 +3,50 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-namespace YsoCorp {
+namespace Vehicles {
     public class Wheel : MonoBehaviour {
         public Rigidbody rbVehicle;
-        public bool control;
+
         [Header("Suspension")]
-        public float restDistance;
-        public float strength;
-        public float damping;
-        [Header("Steering")]
-        public float gripFactor;
-        public float tireMass;
-        [Header("Visuals")]
-        public Transform model;
-        public float markThreshold;
-        public TrailRenderer trail;
-        public bool isGrounded { get; private set; } = true;
+        [SerializeField] private float _restDistance;
+        [SerializeField] private float _strength;
+        [SerializeField] private float _damping;
+
+        [Header("Steering force")]
+        [SerializeField] private float _gripFactor;
+        [SerializeField] private float _tireMass;
+
+        public bool IsGrounded { get; private set; } = true;
+
+        private void OnDrawGizmosSelected() {
+            Gizmos.color = Color.blue;
+            Gizmos.DrawWireSphere(this.transform.position, .25f);
+            Gizmos.color = Color.green;
+            Gizmos.DrawWireSphere(this.transform.position - this.transform.up * this._restDistance, .25f);
+        }
 
         public void CalculateForces(float speed) {
-            if (Physics.Raycast(this.transform.position, -this.transform.up, out RaycastHit hitInfo, this.restDistance)) {
-                Vector3 tireVelocity = this.rbVehicle.GetPointVelocity(this.transform.position);
-                //suspension
-                float upVelocity = Vector3.Dot(this.transform.up, tireVelocity);
-                float offset = this.restDistance - hitInfo.distance;
-                float force = (offset * this.strength) - (upVelocity * this.damping);
-                Vector3 springForce = this.transform.up * force;
-
-                // //steering
-                float steeringVel = Vector3.Dot(this.transform.right, tireVelocity);
-                float velChange = -(steeringVel * this.gripFactor) / Time.fixedDeltaTime * this.tireMass;
-                Vector3 steeringForce = this.transform.right * velChange;
-
-                this.rbVehicle.AddForceAtPosition(springForce + steeringForce + this.transform.forward * speed, this.transform.position);
-
-                //  this.model.localPosition = Vector3.up * (offset - this.transform.localPosition.y);
-                //  this.trail.emitting = Mathf.Abs(velChange) > this.markThreshold;
-                this.isGrounded = true;
-            } else {
-                this.isGrounded = false;
-                //  this.model.localPosition = Vector3.up * -this.transform.localPosition.y;
-                //  this.trail.emitting = false;
+            Transform wheelTransform = this.transform;
+            this.IsGrounded = Physics.Raycast(wheelTransform.position, -wheelTransform.up, out RaycastHit hitInfo, this._restDistance);
+            if (this.IsGrounded) {
+                Vector3 tireVelocity = this.rbVehicle.GetPointVelocity(wheelTransform.position);
+                Vector3 springForce = this.CalculateSuspension(tireVelocity, hitInfo.distance);
+                Vector3 steeringForce = this.CalculateSteeringForce(tireVelocity);
+                this.rbVehicle.AddForceAtPosition(springForce + steeringForce + wheelTransform.forward * speed, wheelTransform.position);
             }
+        }
+
+        private Vector3 CalculateSuspension(Vector3 tireVelocity, float distance) {
+            float upVelocity = Vector3.Dot(this.transform.up, tireVelocity);
+            float offset = this._restDistance - distance;
+            float force = (offset * this._strength) - (upVelocity * this._damping);
+            return this.transform.up * force;
+        }
+
+        private Vector3 CalculateSteeringForce(Vector3 tireVelocity) {
+            float steeringVel = Vector3.Dot(this.transform.right, tireVelocity);
+            float velChange = -(steeringVel * this._gripFactor) / Time.fixedDeltaTime * this._tireMass;
+            return this.transform.right * velChange;
         }
     }
 }
