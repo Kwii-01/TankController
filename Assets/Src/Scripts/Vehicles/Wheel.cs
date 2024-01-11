@@ -8,7 +8,7 @@ namespace Vehicles {
         public Rigidbody rbVehicle;
 
         [Header("Suspension")]
-        [SerializeField] private float _restDistance;
+        [SerializeField, Range(0f, 10f)] private float _restDistance;
         [SerializeField] private float _strength;
         [SerializeField] private float _damping;
 
@@ -17,9 +17,10 @@ namespace Vehicles {
         [SerializeField] private float _tireMass;
 
         public bool IsGrounded { get; private set; } = true;
+        public float Offset;
 
         private void OnDrawGizmosSelected() {
-            Gizmos.color = Color.blue;
+            Gizmos.color = Color.cyan;
             Gizmos.DrawWireSphere(this.transform.position, .25f);
             Gizmos.color = Color.green;
             Gizmos.DrawWireSphere(this.transform.position - this.transform.up * this._restDistance, .25f);
@@ -40,6 +41,7 @@ namespace Vehicles {
             float upVelocity = Vector3.Dot(this.transform.up, tireVelocity);
             float offset = this._restDistance - distance;
             float force = (offset * this._strength) - (upVelocity * this._damping);
+            this.Offset = offset;
             return this.transform.up * force;
         }
 

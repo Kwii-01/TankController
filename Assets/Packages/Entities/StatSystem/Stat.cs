@@ -36,6 +36,10 @@ namespace StatSystem {
             this.BaseValue = baseValue;
         }
 
+        public static implicit operator float(Stat stat) => stat.Value;
+
+        public static explicit operator Stat(float value) => new Stat(value);
+
         public void AddModifier(StatModifier mod) {
             this._isDirty = true;
             this.statModifiers.Add(mod);

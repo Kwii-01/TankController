@@ -12,7 +12,8 @@ namespace StatSystem {
         Damage,
         Range,
         MoveSpeed,
-        AttackSpeed
+        AttackSpeed,
+        Acceleration
     }
 
     public class StatBehaviour : MonoBehaviour {
