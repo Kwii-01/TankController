@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 
+using Entities;
+
 using UnityEngine;
 
 using Weapons;
@@ -28,6 +30,10 @@ namespace Vehicles {
             //     _targetWeaponRotation = Quaternion.Euler(0f, direction.y, 0f);
             // }
             this._targetRotation = Quaternion.Euler(0, 8f, Quaternion.LookRotation(direction.normalized).eulerAngles.y);
+        }
+
+        public void Setup(Entity entity) {
+            this._weapon.SetUser(entity);
         }
 
         public void BeginShooting() {

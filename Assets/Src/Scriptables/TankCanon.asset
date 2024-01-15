@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24e599ce9c5a652439ed1b7bb6376c7f, type: 3}
+  m_Name: TankCanon
+  m_EditorClassIdentifier: 
+  Name: Canon
+  UseSpeed: 1
+  UseDelay: 0.05
+  Range: 100
+  Damages: 10
+  RecoilForce: 1000000
+  RecoilRadius: 10
+  RecoilOffset: {x: 0, y: -3, z: 0}
+  CamShakeDuration: 0
+  CamShakeAmplitude: 0
+  CamShakeFrequency: 0
+  InstantiatedProjectile: 0
+  ProjectilePrefab: {fileID: 0}
+  ShootVFX: {fileID: 5124166242607940835, guid: 3b7507cbf49a98548a9440443ee9d843,
+    type: 3}
+  HitVFX: {fileID: 5175581799238459098, guid: acb4d7245301352429381eae56a82708, type: 3}
+  HitDecalVFX: {fileID: 0}

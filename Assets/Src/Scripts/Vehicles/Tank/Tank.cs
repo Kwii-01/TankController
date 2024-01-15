@@ -29,6 +29,7 @@ namespace Vehicles {
         private float _normalizedSpeed;
 
         private void Start() {
+            this._turret.Setup(this);
             this._leftSpeedMultiplier = DEFAULT_SPEED_MULTIPLIER;
             this._rightSpeedMultiplier = DEFAULT_SPEED_MULTIPLIER;
             this._accelerationTimer = this._accelerationTime;

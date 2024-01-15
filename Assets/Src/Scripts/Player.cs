@@ -24,6 +24,13 @@ namespace TankController {
                 this._tank.Turret.Rotate(this._tank.transform.InverseTransformDirection(lookDirection));
             }
 
+            if (Input.GetMouseButtonDown(0)) {
+                this._tank.Turret.BeginShooting();
+            } else if (Input.GetMouseButtonUp(0)) {
+                this._tank.Turret.StopShooting();
+            }
+
+
         }
 
     }
