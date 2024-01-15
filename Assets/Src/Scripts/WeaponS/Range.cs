@@ -39,6 +39,9 @@ namespace Weapons {
             this.ShootRecoil();
             this.ShootCamShake();
             this.ShootVFX();
+            if (this._settingSO.InstantiatedProjectile == false) {
+                this.SimulateShoot();
+            }
         }
 
         protected void ShootRecoil() {
@@ -53,6 +56,19 @@ namespace Weapons {
 
         protected void ShootCamShake() {
             Cam.Instance.DoShake(this._settingSO.CamShakeDuration, this._settingSO.CamShakeAmplitude, this._settingSO.CamShakeFrequency);
+        }
+
+        /// <summary>
+        /// This is a temporary way to shoot at mouse position
+        /// </summary>
+        protected void SimulateShoot() {
+            Ray targetPoint = Cam.Instance.Camera.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(targetPoint, out RaycastHit hitInfo, this._settingSO.Range)) {
+                Vector3 direction = hitInfo.point - this._firePoint.position;
+                if (Physics.SphereCast(this._firePoint.position, .25f, direction.normalized, out RaycastHit hitInfo1)) {
+                    Instantiate(this._settingSO.HitVFX, hitInfo1.point, Quaternion.LookRotation(hitInfo1.normal, Vector3.forward) * Quaternion.Euler(90f, 0f, 0f));
+                }
+            }
         }
     }
 }
