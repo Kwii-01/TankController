@@ -21,7 +21,7 @@ MonoBehaviour:
   RecoilRadius: 10
   RecoilOffset: {x: 0, y: -3, z: 0}
   CamShakeDuration: 0.2
-  CamShakeAmplitude: 2
+  CamShakeAmplitude: 4
   CamShakeFrequency: 10
   InstantiatedProjectile: 0
   ProjectilePrefab: {fileID: 0}
