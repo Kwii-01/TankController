@@ -12,11 +12,11 @@ namespace Vehicles {
         private Quaternion _targetWeaponRotation;
 
         private void Start() {
-            this._targetRotation = this.transform.rotation;
+            this._targetRotation = this.transform.localRotation;
         }
 
         private void Update() {
-            this.transform.rotation = Quaternion.RotateTowards(this.transform.rotation, this._targetRotation, this._rotationSpeed * Time.deltaTime);
+            this.transform.localRotation = Quaternion.RotateTowards(this.transform.localRotation, this._targetRotation, this._rotationSpeed * Time.deltaTime);
         }
 
         public void Rotate(Vector3 direction) {
@@ -25,9 +25,7 @@ namespace Vehicles {
             if (angle > this._clampX.x && angle < this._clampX.y) {
                 _targetWeaponRotation = Quaternion.Euler(0f, direction.y, 0f);
             }
-            // ONLY Y ROTATION
-            direction.y = 0f;
-            this._targetRotation = Quaternion.LookRotation(direction.normalized);
+            this._targetRotation = Quaternion.Euler(0, 8f, Quaternion.LookRotation(direction.normalized).eulerAngles.y);
         }
 
         public void BeginShooting() {

@@ -10,6 +10,8 @@ namespace Vehicles {
         [Header("Tank")]
         [SerializeField] private float _accelerationTime;
         [SerializeField] private AnimationCurve _accelerationCurve;
+        [SerializeField] private Turret _turret;
+        public Turret Turret => this._turret;
 
         [Header("Chains")]
         [SerializeField] private TankChain _leftChain;
@@ -42,6 +44,7 @@ namespace Vehicles {
 
         protected void FixedUpdate() {
             this.ApplyForcesOnWheels();
+            this.ClampSpeed();
         }
 
         public override void Move(float direction) {
@@ -106,13 +109,20 @@ namespace Vehicles {
             this._rightChain.Apply(speed * this._rightSpeedMultiplier);
         }
 
+        private void ClampSpeed() {
+            Vector3 velocity = this.transform.InverseTransformDirection(this.rb.velocity);
+            float maxSpeed = this.statBehaviour.Get(StatSystem.StatType.MoveSpeed);
+            velocity.z = Mathf.Clamp(velocity.z, -maxSpeed, maxSpeed);
+            this.rb.velocity = this.transform.TransformDirection(velocity);
+        }
+
         private float CalculateSpeed() {
             this._currentSpeed = Vector3.Dot(this.transform.forward, this.rb.velocity);
             this._normalizedSpeed = Mathf.Clamp01(Mathf.Abs(this._currentSpeed) / this.statBehaviour.Get(StatSystem.StatType.MoveSpeed));
             if (this._speeding) {
                 return this._accelerationCurve.Evaluate(this._accelerationTime / this._accelerationTimer) * this._power;
             }
-            return -this._currentSpeed * this.rb.mass;
+            return -this._currentSpeed * this.rb.mass * 2f;
         }
 
     }
