@@ -6,6 +6,7 @@ using Entities;
 using UnityEngine;
 
 using DG.Tweening;
+using TankController;
 
 namespace Weapons {
     public class Range : Weapon {
@@ -36,6 +37,7 @@ namespace Weapons {
 
         protected void Shoot() {
             this.ShootRecoil();
+            this.ShootCamShake();
             this.ShootVFX();
         }
 
@@ -47,6 +49,10 @@ namespace Weapons {
             if (this._settingSO.ShootVFX) {
                 Instantiate(this._settingSO.ShootVFX, this._firePoint.position, this._firePoint.rotation);
             }
+        }
+
+        protected void ShootCamShake() {
+            Cam.Instance.DoShake(this._settingSO.CamShakeDuration, this._settingSO.CamShakeAmplitude, this._settingSO.CamShakeFrequency);
         }
     }
 }

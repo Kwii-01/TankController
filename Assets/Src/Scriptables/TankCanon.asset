@@ -20,9 +20,9 @@ MonoBehaviour:
   RecoilForce: 1000000
   RecoilRadius: 10
   RecoilOffset: {x: 0, y: -3, z: 0}
-  CamShakeDuration: 0
-  CamShakeAmplitude: 0
-  CamShakeFrequency: 0
+  CamShakeDuration: 0.2
+  CamShakeAmplitude: 2
+  CamShakeFrequency: 10
   InstantiatedProjectile: 0
   ProjectilePrefab: {fileID: 0}
   ShootVFX: {fileID: 5124166242607940835, guid: 3b7507cbf49a98548a9440443ee9d843,

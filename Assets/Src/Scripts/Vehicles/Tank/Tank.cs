@@ -18,8 +18,8 @@ namespace Vehicles {
         [SerializeField] private TankChain _rightChain;
 
 
-        private bool _steering;
-        private bool _speeding;
+        public bool Steering { get; private set; } = false;
+        public bool Speeding { get; private set; } = false;
 
         private float _power;
         private float _accelerationTimer;
@@ -36,7 +36,7 @@ namespace Vehicles {
         }
 
         private void Update() {
-            if (this._speeding) {
+            if (this.Speeding) {
                 if (this._accelerationTimer < this._accelerationTime) {
                     this._accelerationTimer += Time.deltaTime;
                 }
@@ -51,11 +51,11 @@ namespace Vehicles {
         public override void Move(float direction) {
             if (this.isBlackout == false) {
                 this._power = this.statBehaviour.Get(StatSystem.StatType.Acceleration) * direction;
-                if (this._speeding == false && direction != 0) {// JUST BEGAN TO SPEED
+                if (this.Speeding == false && direction != 0) {// JUST BEGAN TO SPEED
                     this._accelerationTimer = 0f;
                 }
-                this._speeding = direction != 0f;
-                if (this._speeding == false) {
+                this.Speeding = direction != 0f;
+                if (this.Speeding == false) {
                     this.Stop();
                 }
             }
@@ -63,7 +63,7 @@ namespace Vehicles {
 
         public override void Stop() {
             this._power = 0f;
-            this._speeding = false;
+            this.Speeding = false;
             this._accelerationTimer = this._accelerationTime;
             this._leftSpeedMultiplier = DEFAULT_SPEED_MULTIPLIER;
             this._rightSpeedMultiplier = DEFAULT_SPEED_MULTIPLIER;
@@ -79,15 +79,15 @@ namespace Vehicles {
 
         private void SetSteer(float steerSuperior, float steerInferior, float direction) {
             if (direction > 0) {
-                this._steering = true;
+                this.Steering = true;
                 this._leftSpeedMultiplier = steerSuperior;
                 this._rightSpeedMultiplier = steerInferior;
             } else if (direction < 0) {
-                this._steering = true;
+                this.Steering = true;
                 this._leftSpeedMultiplier = steerInferior;
                 this._rightSpeedMultiplier = steerSuperior;
             } else {
-                this._steering = false;
+                this.Steering = false;
                 this._leftSpeedMultiplier = DEFAULT_SPEED_MULTIPLIER;
                 this._rightSpeedMultiplier = DEFAULT_SPEED_MULTIPLIER;
             }
@@ -103,7 +103,7 @@ namespace Vehicles {
 
         private void ApplyForcesOnWheels() {
             float speed = this.CalculateSpeed();
-            if (this._steering && this._speeding == false) {
+            if (this.Steering && this.Speeding == false) {
                 speed = this.statBehaviour.Get(StatSystem.StatType.Acceleration) / 1.5f;
             }
             this._leftChain.Apply(speed * this._leftSpeedMultiplier);
@@ -120,7 +120,7 @@ namespace Vehicles {
         private float CalculateSpeed() {
             this._currentSpeed = Vector3.Dot(this.transform.forward, this.rb.velocity);
             this._normalizedSpeed = Mathf.Clamp01(Mathf.Abs(this._currentSpeed) / this.statBehaviour.Get(StatSystem.StatType.MoveSpeed));
-            if (this._speeding) {
+            if (this.Speeding) {
                 return this._accelerationCurve.Evaluate(this._accelerationTime / this._accelerationTimer) * this._power;
             }
             return -this._currentSpeed * this.rb.mass * 2f;
